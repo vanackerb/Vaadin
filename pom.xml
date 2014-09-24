@@ -109,7 +109,7 @@
 				<configuration>
 					<downloadSources>${downloadSources}</downloadSources>
 					<downloadJavadocs>false</downloadJavadocs>
-					<wtpmanifest>true</wtpmanifest>
+					<wtpmanifest>false</wtpmanifest>
 					<wtpapplicationxml>true</wtpapplicationxml>
 					<wtpversion>2.0</wtpversion>
 				</configuration>
@@ -145,6 +145,7 @@
 	</build>
 	<modules>
 		<module>Introduction</module>
+		<module>JSF</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
