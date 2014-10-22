@@ -146,6 +146,7 @@
 	<modules>
 		<module>Introduction</module>
 		<module>JSF</module>
+		<module>IntegrationExercises</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
