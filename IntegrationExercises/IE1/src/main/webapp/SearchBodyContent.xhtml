@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head> <link type="text/css" rel="stylesheet" href="/style/Style1.css"></link></h:head>
+
+<ui:composition template="/template/Template.xhtml">
+		<ui:define name="bodyContent">
+		<form id = "bodyContent">
+			<div id="bodyContent" width= "100%">
+				<h:messages/>
+				<table align="left" clear="right">
+					<tr>
+						<td><h:outputLabel value="Minimum amount:"/></td>
+						<td><h:inputText id="minAmInput" value="#{ie1Bean.minAmInput}"/></td>
+						<td><h:outputLabel value="Maximum amount:"/></td>
+						<td><h:inputText id="maxAmInput" value="#{ie1Bean.maxAmInput}"/></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="Number of products:"/></td>
+						<td><h:inputText id="numberOfProducts" value="#{ie1Bean.numberOfProducts}"/></td>
+						<td><h:outputLabel value="Delivered"/></td>
+						<td><h:selectBooleanCheckbox id="delivered"/></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="Product name:"/></td>
+						<td><h:inputText id="prodName" value="#{ie1Bean.prodName}"/></td>
+						<td><h:outputLabel value="E-mail address:"/></td>
+						<td><h:inputText id="email" value="#{ie1Bean.email}"/></td>
+					</tr>
+				</table>
+				<h:commandButton type="reset" action="#{ie1Bean.Clear}" immediate="true" value="Clear">
+					<f:ajax render="bodyContent:minAmInput bodyContent:maxAmInput bodyContent:numberOfProducts bodyContent:delivered bodyContent:prodName  bodyContent:email" resetValues="true"/>
+				</h:commandButton>
+				<h:commandButton action="#{ie1Bean.toDetail}" value="Search"/>
+	
+			</div>
+			</form>
+		</ui:define>
+</ui:composition>
+</ui:fragment>

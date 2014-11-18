@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:head></h:head>
+<!--  <h:outputStylesheet library="css" name="/style/Style1.css"  />  -->	
+<body>
+	<div id="header">
+	<table style="border: 1px solid black; width=100%; cellspacing=20px;">
+			<tr align="center: width=100%;">
+				<td><img source="/images/Chrome.jpg" style="width=50%; height=50%;"></img></td>
+				<td><h:outputLabel id="info" value="Company X"/></td>
+				<td><h:selectOneMenu value="#{ie1Bean.langChoice1}"/>
+							<f:selectItems value="#{ie1Bean.languages}"/>
+				</td>
+			</tr>
+	</table>
+	</div>
+	</body>
+</ui:fragment>
