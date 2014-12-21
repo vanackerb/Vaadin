@@ -1,29 +1,30 @@
+html{
+	background-color: lightgray
+}
+
 .header {
 	width: 100%;
 	heigth: 200px;
 	top: 0;
-	background-color: gray;
-	clear:both;
+	clear:right;
 }
 
 .bodyContent {
 	width:100%;
 	padding-top: 50px;
 	padding-bottom: 50px;
-	background-color: gray;
 	clear: both;
 }
 
 .footer {
-	background-color: gray;
 	width: 100%;
 	heigth: 50px;
 	position: absolute;
 	bottom: 0;
-	clear: both;
+	clear: left;
 }
 
 table {
-		background-color: gray;
+		background-color: lightgray;
 }
 

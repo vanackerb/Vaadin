@@ -18,7 +18,7 @@ public class Exercise3 {
 		collection.add(baseOne);
 		collection.add(baseTwo);
 
-		// -- LOWER BOUNDS
+		// -- UPPER BOUNDS
 		// TODO Fix this compile error by changing the code so that you can pass the collection. However, do NOT remove
 		// the generics. You can of course modify them. The solution implies using lower bounds
 
@@ -27,7 +27,7 @@ public class Exercise3 {
 		Collection<Base1> anotherCollection = new ArrayList<Base1>();
 		anotherCollection.add(new Base1());
 
-		// -- UPPER BOUNDS
+		// -- LOWER BOUNDS
 		// TODO Fix this compile error by changing the code so that you can pass the collection. However, do NOT remove
 		// the generics. You can of course modify them. The solution implies using upper bounds
 
@@ -35,10 +35,10 @@ public class Exercise3 {
 
 	}
 
-	public void thisWillNotWork(Collection<Object> collection) {
+	public void thisWillNotWork(Collection<? extends Super> collection) {
 	}
 
-	public void thisWillNotWorkEither(Collection<Object> collection) {
+	public void thisWillNotWorkEither(Collection<? super Base2> collection) {
 		collection.add(new Base2());
 	}
 }

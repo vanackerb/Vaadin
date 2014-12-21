@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<f:view>
+		<h:form>
+			
+			<h:inputText id="myInput" value="#{ex2_A_BackingAction.text}">
+				<f:validator validatorId="numberValidator"/>
+			</h:inputText>
+			<h:message for="myInput" style="color:red"/>
+			<h:outputText value="#{ex2_A_BackingAction.text}" rendered="#{!facesContext.validationFailed}"/>
+			<h:commandButton actionlistener="#{ex2_A_BackingAction.showText}" value="Klik op mij" />
+		</h:form>
+	</f:view>
+</h:head>
+</html>

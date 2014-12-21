@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import org.testng.internal.PackageUtils;
 
 import be.groept.annotations.ImASecuredClass;
+import be.groept.annotations.Secured;
 
 @Test
 public class Exercise2 {
@@ -20,6 +21,11 @@ public class Exercise2 {
 		for (String processorClassName : PackageUtils.findClassesInPackage("be.groept.annotations", include,
 				new ArrayList<String>())) {
 			Class<?> clazz = Class.forName(processorClassName);
+
+			if (clazz.isAnnotationPresent(Secured.class)) {
+				results[0] = clazz;
+				results[1] = clazz.getAnnotation(Secured.class).role();
+			}
 
 			// Create an annotation called "Secured" (put it in the src/main/java), give it a property "role"
 			// Put the annotation on the "ImASecuredClass", and give the role property a value "admin"

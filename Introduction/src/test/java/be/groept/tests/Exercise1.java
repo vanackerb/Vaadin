@@ -8,6 +8,6 @@ public class Exercise1 {
 
 	public void thisStringEquals() {
 		// Fix this so the test is "green"
-		Assert.assertEquals("test string", "wrong string");
+		Assert.assertEquals("wrong string", "wrong string");
 	}
 }

@@ -3,5 +3,47 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
 	version="2.2">
-
+<application>
+   <message-bundle>messages</message-bundle>
+    <resource-bundle>
+        <base-name>messages</base-name>
+        <var>msg</var>
+    </resource-bundle>
+    <locale-config>
+        <default-locale>en</default-locale>
+        <supported-locale>de</supported-locale>
+    </locale-config>
+</application>
+<navigation-rule>
+    <from-view-id>Ex7.xhtml</from-view-id>
+    <navigation-case>
+        <from-outcome>success</from-outcome>
+        <to-view-id>Ex7-2.xhtml</to-view-id>
+    </navigation-case>
+</navigation-rule>
+<navigation-rule>
+    <from-view-id>Ex7-2.xhtml</from-view-id>
+    <navigation-case>
+        <from-outcome>success</from-outcome>
+        <to-view-id>Ex7-3.xhtml</to-view-id>
+    </navigation-case>
+</navigation-rule>
+<navigation-rule>
+    <from-view-id>Ex7-3.xhtml</from-view-id>
+    <navigation-case>
+        <from-outcome>success</from-outcome>
+        <to-view-id>Ex7-2.xhtml</to-view-id>
+    </navigation-case>
+</navigation-rule>
+<navigation-rule>
+    <from-view-id>Ex7-2.xhtml</from-view-id>
+    <navigation-case>
+        <from-outcome>eerste</from-outcome>
+        <to-view-id>Ex7.xhtml</to-view-id>
+    </navigation-case>
+</navigation-rule>
+	<validator>
+        <validator-id>numberValidator</validator-id>
+        <validator-class>be.groept.controllers.NumberValidator</validator-class>
+    </validator>
 </faces-config>

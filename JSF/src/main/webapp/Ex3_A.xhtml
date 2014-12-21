@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<f:view>
+		<h:form>
+			<h:inputText id="myInput" value="#{ex3_A_backingAction.name}" label="Input: "/><br/>
+			<h:message for="myInput" 
+						style="color:red"/><p/>
+			<h:inputText id="serial" value="#{ex3_A_backingAction.serial}"/>
+			<h:message for="serial"/><p/>
+			<p:calendar id="date" value="#{ex3_A_backingAction.date}"/>	
+			<h:message for="date"/><p/>		
+			<h:commandButton actionlistener="#{ex3_A_backingAction.submit}" value="Klik op mij" /><br/><br/>
+		</h:form>
+	</f:view>
+</h:head>
+</html>

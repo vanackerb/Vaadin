@@ -2,6 +2,7 @@ package be.groept.tests;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -29,6 +30,8 @@ public class Exercise4 {
 
 		// add your single line of code here to filter "data", if the line is correct the test below will succeed
 
+		data = data.stream().filter(p -> p.age >= 50).collect(Collectors.toList());
+
 		Assert.assertEquals(data.size(), 50);
 		Assert.assertEquals(data.iterator().next().getAge(), 50);
 	}
@@ -40,6 +43,9 @@ public class Exercise4 {
 		// Again, the wanted solution using the Stream API is exactly one line of code (not formatted of course)!
 
 		double averageAge = 0; // add you code here, remove the = 0 first of course, if the code is correct the test
+
+		averageAge = data.stream().filter(p -> p.age >= 50).collect(Collectors.<Person> averagingDouble(p -> p.getAge()));
+
 		// will succeed
 		Assert.assertEquals(averageAge, 74.5);
 	}
