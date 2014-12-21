@@ -7,17 +7,16 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<head>
-	<link type="text/css" rel="StyleSheet" href="/style/Style1.css"></link>
-</head>
+<h:head>
+	  <h:outputStylesheet name="Style1.css" />
+	  
+</h:head>
 <h:body>
 	<f:view>
-		<ui:insert name="header"/>
 		<ui:include src="/template/Header.xhtml" />
 		<p/>
 		<ui:insert name="bodyContent" />
 		<p/>
-		<ui:insert name="footer" />
 		<ui:include src="/template/Footer.xhtml" />
 	</f:view>
 </h:body>
