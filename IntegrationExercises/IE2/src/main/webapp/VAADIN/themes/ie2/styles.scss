@@ -1,0 +1,36 @@
+@import "../reindeer/reindeer.scss";
+
+.ie2{
+	@include reindeer;
+	
+	.red .v-button-caption {
+		 color: red;
+		 padding: 10px;
+	}
+	
+	.header{
+		padding-left: 45%;
+		margin-bottom: 25px;
+		background-color: gray;
+		color: white;
+	}
+	
+	.search{
+		padding-top: 10px;
+		padding-left: 10px;
+		padding-right: 10px;
+		padding-bottom: 10px;
+	}
+	
+	.footer{
+		padding-left: 40%;
+		background-color: gray;
+		color: white;
+	}
+	
+	.panel{
+		padding: 15px;
+	}
+	
+
+}
