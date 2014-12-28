@@ -2,6 +2,8 @@ package be.groept.ui;
 
 import javax.servlet.annotation.WebServlet;
 
+import be.groept.vaadin.model.SearchOrder;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
