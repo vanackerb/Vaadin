@@ -23,6 +23,7 @@ public class MyUi extends UI {
 
 		Navigator navigator = new Navigator(getUI(), panel);
 		setNavigator(navigator);
+		getNavigator().addView("OrderDetail", OrderDetail.class);
 		getNavigator().addView("SearchOrder", SearchOrder.class);
 		navigator.navigateTo("SearchOrder");
 		setContent(panel);

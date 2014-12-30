@@ -1,13 +1,13 @@
 package be.groept.ui;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import be.groept.vaadin.model.Order;
 import be.groept.vaadin.model.OrderSearchCriteria;
 import be.groept.vaadin.model.OrderServiceImpl;
 import be.groept.vaadin.model.Product;
 
-import com.vaadin.data.Item;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -22,13 +22,23 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 
 public class SearchOrder extends Template {
+
+	private String orderId;
+	private String customerId;
+	private List<Product> prods;
+	private boolean delivered;
+	private int deliveryDays;
+	private BigDecimal total;
+	int products = 0;
 
 	@Override
 	protected Component getBody() {
 
-		int products = 0;
+		OrderServiceImpl osimp = new OrderServiceImpl();
+		int i = 0;
 
 		// Creation of all the components inside the body
 		Panel searchpanel = new Panel("Search orders");
@@ -99,9 +109,7 @@ public class SearchOrder extends Template {
 		t.addContainerProperty("Delivered?", Boolean.class, null);
 		t.addContainerProperty("DeliveryDays", Integer.class, null);
 		t.addContainerProperty("Total Price", BigDecimal.class, null);
-		// t.addContainerProperty("Details", Button.class, null);
-
-		OrderServiceImpl osimp = new OrderServiceImpl();
+		t.addContainerProperty("Details", Button.class, null);
 
 		// fill table with data from list
 		for (Order o : osimp.getAllOrdersForCustomer()) {
@@ -110,16 +118,42 @@ public class SearchOrder extends Template {
 			for (Product p : o.getProducts()) {
 				products++;
 			}
+			i++;
+			orderId = o.getOrderId();
+			customerId = o.getCustomerId();
+			prods = o.getProducts();
+			delivered = o.isDelivered();
+			deliveryDays = o.getDeliveryDays();
+			total = o.getTotalOrderPrice();
 
-			Object newItemId = t.addItem();
-			Item row = t.getItem(newItemId);
-			row.getItemProperty("orderId").setValue(o.getOrderId());
-			row.getItemProperty("customerId").setValue(o.getCustomerId()); //
-			row.getItemProperty("#producten").setValue(products);
-			row.getItemProperty("Delivered?").setValue(o.isDelivered());
-			row.getItemProperty("DeliveryDays").setValue(o.getDeliveryDays());
-			row.getItemProperty("Total Price").setValue(o.getTotalOrderPrice());
-			// row.getItemProperty("Details").setValue(o.getDeliveryDays());
+			Button detail = new Button("Detail");
+			// add items to table
+			t.addItem(new Object[] { orderId, customerId, products, delivered, deliveryDays, total, detail }, i);
+
+			Integer itemId = new Integer(i);
+			/*
+			 * Object newItemId = t.addItem(); Item row = t.getItem(newItemId);
+			 * row.getItemProperty("orderId").setValue(o.getOrderId());
+			 * row.getItemProperty("customerId").setValue(o.getCustomerId());
+			 * row.getItemProperty("#producten").setValue(products);
+			 * row.getItemProperty("Delivered?").setValue(o.isDelivered());
+			 * row.getItemProperty("DeliveryDays").setValue(o.getDeliveryDays());
+			 * row.getItemProperty("Total Price").setValue(o.getTotalOrderPrice()); Button detail = new
+			 * Button("Detail"); row.getItemProperty("Details").setValue(detail);
+			 */
+			detail.setData(itemId);
+
+			// add navigation to detail page
+			detail.addClickListener(new ClickListener() {
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+
+					Integer iid = (Integer) event.getButton().getData();
+					UI.getCurrent().getNavigator().navigateTo("OrderDetail");
+				}
+			});
+
 			products = 0;
 		}
 
