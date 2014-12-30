@@ -1,10 +1,13 @@
-package be.groept.vaadin.model;
+package be.groept.ui;
 
 import java.math.BigDecimal;
-import java.util.List;
 
-import be.groept.ui.Template;
+import be.groept.vaadin.model.Order;
+import be.groept.vaadin.model.OrderSearchCriteria;
+import be.groept.vaadin.model.OrderServiceImpl;
+import be.groept.vaadin.model.Product;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -25,13 +28,7 @@ public class SearchOrder extends Template {
 	@Override
 	protected Component getBody() {
 
-		final double minimumAmount;
-		final double maximumAmount;
-		final int numberProds;
-		final boolean delivered;
-		final String pname;
-		final String searchemail;
-		List<Order> list;
+		int products = 0;
 
 		// Creation of all the components inside the body
 		Panel searchpanel = new Panel("Search orders");
@@ -60,8 +57,9 @@ public class SearchOrder extends Template {
 		tfemail.setNullRepresentation("");
 
 		// set row expandratio
-		gl.setRowExpandRatio(4, 4);
+		gl.setRowExpandRatio(4, 15);
 		gl.setWidth(75, Unit.PERCENTAGE);
+		gl.setHeightUndefined();
 		gl.setSpacing(true);
 		HorizontalLayout buttons = new HorizontalLayout();
 		buttons.addComponents(clear, search);
@@ -83,29 +81,51 @@ public class SearchOrder extends Template {
 		tfnuprod.setImmediate(true);
 		tfemail.setImmediate(true);
 
-		// add converters to textfields
-		/*
-		 * tfmina.setConverter(new StringToDoubleConverter()); tfmaxa.setConverter(new StringToDoubleConverter());
-		 * tfnuprod.setConverter(new StringToIntegerConverter());
-		 */
+		// start with values of textfields and validators set to null
+		tfmina.setValue(null);
+		tfmaxa.setValue(null);
+		tfnuprod.setValue(null);
+		cbdel.setValue(null);
+		tfproname.setValue(null);
+		tfemail.setValue(null);
 
+		// create table with it's column headers
 		Table t = new Table("Orders found");
 		t.setVisible(false);
 
 		t.addContainerProperty("orderId", String.class, null);
 		t.addContainerProperty("customerId", String.class, null);
-		t.addContainerProperty("#producten", List.class, null);
-		t.addContainerProperty("Delivered?", boolean.class, null);
-		t.addContainerProperty("DeliveryDays", int.class, null);
+		t.addContainerProperty("#producten", Integer.class, null);
+		t.addContainerProperty("Delivered?", Boolean.class, null);
+		t.addContainerProperty("DeliveryDays", Integer.class, null);
 		t.addContainerProperty("Total Price", BigDecimal.class, null);
+		// t.addContainerProperty("Details", Button.class, null);
 
 		OrderServiceImpl osimp = new OrderServiceImpl();
-		t.addItems(osimp.getAllOrdersForCustomer());
-		t.setSizeFull();
+
+		// fill table with data from list
+		for (Order o : osimp.getAllOrdersForCustomer()) {
+
+			// count number of products from order
+			for (Product p : o.getProducts()) {
+				products++;
+			}
+
+			Object newItemId = t.addItem();
+			Item row = t.getItem(newItemId);
+			row.getItemProperty("orderId").setValue(o.getOrderId());
+			row.getItemProperty("customerId").setValue(o.getCustomerId()); //
+			row.getItemProperty("#producten").setValue(products);
+			row.getItemProperty("Delivered?").setValue(o.isDelivered());
+			row.getItemProperty("DeliveryDays").setValue(o.getDeliveryDays());
+			row.getItemProperty("Total Price").setValue(o.getTotalOrderPrice());
+			// row.getItemProperty("Details").setValue(o.getDeliveryDays());
+			products = 0;
+		}
 
 		// Show exactly the currently contained rows (items)
 		t.setPageLength(t.size());
-		t.setHeight(100, Unit.PERCENTAGE);
+		t.setImmediate(true);
 
 		// add components to layout
 		gl.addComponents(mina, tfmina, maxa, tfmaxa, nuprod, tfnuprod, del, cbdel, proname, tfproname, email, tfemail, buttons);
@@ -114,7 +134,7 @@ public class SearchOrder extends Template {
 		searchpanel.setImmediate(true);
 		searchpanel.setContent(gl);
 
-		// if button "clear" is clicked all textfields & the checkbox should be null again
+		// if button "clear" is clicked all textfields & the checkbox become null again
 		clear.addClickListener(event -> {
 
 			tfmina.setValue(null);
@@ -132,6 +152,8 @@ public class SearchOrder extends Template {
 			@Override
 			public void buttonClick(ClickEvent event) {
 
+				OrderSearchCriteria ocrit = new OrderSearchCriteria();
+				osimp.searchOrders(ocrit);
 				t.setVisible(true);
 			}
 		});
@@ -139,4 +161,5 @@ public class SearchOrder extends Template {
 		// return the panel to be placed in the body
 		return searchpanel;
 	}
+
 }

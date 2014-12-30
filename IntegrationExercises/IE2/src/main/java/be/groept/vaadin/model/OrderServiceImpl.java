@@ -93,6 +93,15 @@ public class OrderServiceImpl implements OrderService, Serializable {
 		Product elitebook = new Product(4L, "P4", "HP Elitebook", "HP Elitebook 8570w LY556EA Azerty", new BigDecimal("2350.45"));
 		order = new Order(2L, "Order2", FIXED_CUSTOMER, false, 1, elitebook);
 		orders.add(order);
+
+		// Order3
+		Product plasmaTv = new Product(5L, "P5", "LG 60\" PLASMA", "LG 50 inch", new BigDecimal("1500.33"));
+		Product pda = new Product(6L, "P6", "Apple IPhone", "IPhone 6", new BigDecimal("585.50"));
+		Product tablet = new Product(7L, "P7", "Apple IPad", "IPad 128 Gb", new BigDecimal("799.99"));
+		Product loadingDock = new Product(8L, "P8", "Apple Dock", "Loading Dock", new BigDecimal("350.99"));
+		order = new Order(3L, "Order3", FIXED_CUSTOMER, true, 10, plasmaTv, pda, tablet, loadingDock);
+		orders.add(order);
+
 		map.put(FIXED_CUSTOMER, orders);
 	}
 }
