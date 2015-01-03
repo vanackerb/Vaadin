@@ -132,12 +132,12 @@ public class SearchOrder extends Template {
 		tfemail.setValue(null);
 
 		// create column headers and fill table with start data
-		t.addContainerProperty("orderId", String.class, null);
-		t.addContainerProperty("customerId", String.class, null);
-		t.addContainerProperty("#producten", Integer.class, null);
+		t.addContainerProperty("Order Id", String.class, null);
+		t.addContainerProperty("Customer Id", String.class, null);
+		t.addContainerProperty("Number of products", Integer.class, null);
 		t.addContainerProperty("Delivered?", Boolean.class, null);
-		t.addContainerProperty("DeliveryDays", Integer.class, null);
-		t.addContainerProperty("Total Price", BigDecimal.class, null);
+		t.addContainerProperty("Delivery days", Integer.class, null);
+		t.addContainerProperty("Total price", BigDecimal.class, null);
 		t.addContainerProperty("Details", Button.class, null);
 
 		fillTable();

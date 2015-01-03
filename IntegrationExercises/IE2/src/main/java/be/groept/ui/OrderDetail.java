@@ -74,7 +74,6 @@ public class OrderDetail extends Template {
 
 		// set size of table
 		t.setPageLength(t.size());
-		// t.setWidth(80, Unit.PERCENTAGE);
 
 		// add components to layout
 		gl.addComponents(orderId, oId, customerId, cId, products, pr, delivered, del, deldays, deDays, total, tot);

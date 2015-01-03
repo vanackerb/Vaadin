@@ -62,7 +62,19 @@ public class OrderServiceImpl implements OrderService, Serializable {
 				}
 			}
 
-			if (!shouldAdd && orderSearchCriteria.getNumberOfProducts() > 0) {
+			if (!shouldAdd) {
+				int count = 0;
+				for (Product p : order.getProducts()) {
+					count++;
+				}
+				if (orderSearchCriteria.getNumberOfProducts() != null && orderSearchCriteria.getNumberOfProducts() == count) {
+
+					shouldAdd = true;
+				}
+			}
+
+			if (!shouldAdd && orderSearchCriteria.getDelivered() != null
+					&& orderSearchCriteria.getDelivered() == order.isDelivered()) {
 				shouldAdd = true;
 			}
 
