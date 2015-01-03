@@ -1,14 +1,15 @@
 package be.groept.ui;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import be.groept.vaadin.model.Order;
 import be.groept.vaadin.model.OrderSearchCriteria;
 import be.groept.vaadin.model.OrderServiceImpl;
 import be.groept.vaadin.model.Product;
 
-import com.vaadin.data.validator.DoubleRangeValidator;
+import com.vaadin.data.util.converter.StringToBigDecimalConverter;
+import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.validator.AbstractValidator;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.ui.Button;
@@ -26,19 +27,15 @@ import com.vaadin.ui.UI;
 
 public class SearchOrder extends Template {
 
-	private String orderId;
-	private String customerId;
-	private List<Product> prods;
-	private boolean delivered;
-	private int deliveryDays;
-	private BigDecimal total;
 	int products = 0;
+	OrderServiceImpl osimp = new OrderServiceImpl();
+	int i = 0;
+
+	// create table
+	Table t = new Table("Orders found");
 
 	@Override
 	protected Component getBody() {
-
-		OrderServiceImpl osimp = new OrderServiceImpl();
-		int i = 0;
 
 		// Creation of all the components inside the body
 		Panel searchpanel = new Panel("Search orders");
@@ -80,10 +77,45 @@ public class SearchOrder extends Template {
 		gl.addStyleName("search");
 
 		// add validators to the textfields
-		tfmina.addValidator(new DoubleRangeValidator("Value must be a decimal number!", 0.00, 999999999.99));
-		tfmaxa.addValidator(new DoubleRangeValidator("Value must be a decimal number!", 0.00, 999999999.99));
+		tfmina.addValidator(new AbstractValidator<BigDecimal>("Must be decimal number") {
+
+			@Override
+			protected boolean isValidValue(BigDecimal value) {
+
+				return true;
+			}
+
+			@Override
+			public Class<BigDecimal> getType() {
+
+				return BigDecimal.class;
+			}
+
+		});
+
+		tfmaxa.addValidator(new AbstractValidator<BigDecimal>("Must be decimal number") {
+
+			@Override
+			protected boolean isValidValue(BigDecimal value) {
+
+				return true;
+			}
+
+			@Override
+			public Class<BigDecimal> getType() {
+
+				return BigDecimal.class;
+			}
+
+		});
+
 		tfnuprod.addValidator(new IntegerRangeValidator("Value must be an integer number!", 0, 999999999));
 		tfemail.addValidator(new EmailValidator("Must be a valid e-mail address"));
+
+		// set converter to textfields
+		tfmina.setConverter(new StringToBigDecimalConverter());
+		tfmaxa.setConverter(new StringToBigDecimalConverter());
+		tfnuprod.setConverter(new StringToIntegerConverter());
 
 		// set to immediate for immediate validation when focus is lost (eg, user clicks somewhere else in the screen)
 		tfmina.setImmediate(true);
@@ -99,10 +131,7 @@ public class SearchOrder extends Template {
 		tfproname.setValue(null);
 		tfemail.setValue(null);
 
-		// create table with it's column headers
-		Table t = new Table("Orders found");
-		t.setVisible(false);
-
+		// create column headers and fill table with start data
 		t.addContainerProperty("orderId", String.class, null);
 		t.addContainerProperty("customerId", String.class, null);
 		t.addContainerProperty("#producten", Integer.class, null);
@@ -111,55 +140,7 @@ public class SearchOrder extends Template {
 		t.addContainerProperty("Total Price", BigDecimal.class, null);
 		t.addContainerProperty("Details", Button.class, null);
 
-		// fill table with data from list
-		for (Order o : osimp.getAllOrdersForCustomer()) {
-
-			// count number of products from order
-			for (Product p : o.getProducts()) {
-				products++;
-			}
-			i++;
-			orderId = o.getOrderId();
-			customerId = o.getCustomerId();
-			prods = o.getProducts();
-			delivered = o.isDelivered();
-			deliveryDays = o.getDeliveryDays();
-			total = o.getTotalOrderPrice();
-
-			Button detail = new Button("Detail");
-			// add items to table
-			t.addItem(new Object[] { orderId, customerId, products, delivered, deliveryDays, total, detail }, i);
-
-			Integer itemId = new Integer(i);
-			/*
-			 * Object newItemId = t.addItem(); Item row = t.getItem(newItemId);
-			 * row.getItemProperty("orderId").setValue(o.getOrderId());
-			 * row.getItemProperty("customerId").setValue(o.getCustomerId());
-			 * row.getItemProperty("#producten").setValue(products);
-			 * row.getItemProperty("Delivered?").setValue(o.isDelivered());
-			 * row.getItemProperty("DeliveryDays").setValue(o.getDeliveryDays());
-			 * row.getItemProperty("Total Price").setValue(o.getTotalOrderPrice()); Button detail = new
-			 * Button("Detail"); row.getItemProperty("Details").setValue(detail);
-			 */
-			detail.setData(itemId);
-
-			// add navigation to detail page
-			detail.addClickListener(new ClickListener() {
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-
-					Integer iid = (Integer) event.getButton().getData();
-					UI.getCurrent().getNavigator().navigateTo("OrderDetail");
-				}
-			});
-
-			products = 0;
-		}
-
-		// Show exactly the currently contained rows (items)
-		t.setPageLength(t.size());
-		t.setImmediate(true);
+		fillTable();
 
 		// add components to layout
 		gl.addComponents(mina, tfmina, maxa, tfmaxa, nuprod, tfnuprod, del, cbdel, proname, tfproname, email, tfemail, buttons);
@@ -171,13 +152,14 @@ public class SearchOrder extends Template {
 		// if button "clear" is clicked all textfields & the checkbox become null again
 		clear.addClickListener(event -> {
 
+			t.removeAllItems();
 			tfmina.setValue(null);
 			tfmaxa.setValue(null);
 			tfnuprod.setValue(null);
 			cbdel.setValue(null);
 			tfproname.setValue(null);
 			tfemail.setValue(null);
-			t.setVisible(false);
+			fillTable();
 		});
 
 		// when search is clicked, results SHOULD come up...
@@ -186,9 +168,45 @@ public class SearchOrder extends Template {
 			@Override
 			public void buttonClick(ClickEvent event) {
 
+				int y = 0;
 				OrderSearchCriteria ocrit = new OrderSearchCriteria();
-				osimp.searchOrders(ocrit);
-				t.setVisible(true);
+				ocrit.setMinAmount((BigDecimal) tfmina.getConvertedValue());
+				ocrit.setMaxAmount((BigDecimal) tfmaxa.getConvertedValue());
+				ocrit.setNumberOfProducts((Integer) tfnuprod.getConvertedValue());
+				ocrit.setDelivered(cbdel.getValue());
+				ocrit.setProductName(tfproname.getValue());
+				ocrit.setEmail(tfemail.getValue());
+				t.removeAllItems();
+				for (Order o : osimp.searchOrders(ocrit)) {
+
+					// count number of products from order
+					for (Product p : o.getProducts()) {
+						products++;
+					}
+					y++;
+
+					// create a button to go to detail of the order
+					Button detail = new Button("Detail");
+
+					t.addItem(
+							new Object[] { o.getOrderId(), o.getCustomerId(), products, o.isDelivered(), o.getDeliveryDays(),
+									o.getTotalOrderPrice(), detail }, y);
+
+					// add navigation to detail page
+					detail.addClickListener(new ClickListener() {
+
+						@Override
+						public void buttonClick(ClickEvent event) {
+
+							getUI().getSession().setAttribute("order", o);
+							UI.getCurrent().getNavigator().navigateTo("OrderDetail");
+						}
+					});
+
+					t.setPageLength(t.size());
+					products = 0;
+				}
+
 			}
 		});
 
@@ -196,4 +214,40 @@ public class SearchOrder extends Template {
 		return searchpanel;
 	}
 
+	public void fillTable() {
+		// fill table with data from list
+		for (Order o : osimp.getAllOrdersForCustomer()) {
+
+			// count number of products from order
+			for (Product p : o.getProducts()) {
+				products++;
+			}
+			i++;
+
+			// create a button to go to detail of the order
+			Button detail = new Button("Detail");
+
+			// add items to table
+			t.addItem(
+					new Object[] { o.getOrderId(), o.getCustomerId(), products, o.isDelivered(), o.getDeliveryDays(),
+							o.getTotalOrderPrice(), detail }, i);
+
+			// add navigation to detail page
+			detail.addClickListener(new ClickListener() {
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+
+					getUI().getSession().setAttribute("order", o);
+					UI.getCurrent().getNavigator().navigateTo("OrderDetail");
+				}
+			});
+
+			products = 0;
+
+			// Show exactly the currently contained rows (items)
+			t.setPageLength(t.size());
+			t.setImmediate(true);
+		}
+	}
 }
